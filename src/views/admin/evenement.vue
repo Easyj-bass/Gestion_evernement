@@ -1,0 +1,362 @@
+<template>
+    <div>
+        <div class="sub-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-sm-8">
+                        <div class="left-content">
+                            <p>Site d'événement <em>Entreprise</em>***.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-4">
+                        <div class="right-icons">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-behance"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                <li>
+                                    <div class="main-button-red">
+                                        <router-link class="scroll-to-section" to="/login">Se deconnecter</router-link>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <header class="header-area header-sticky">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <nav class="main-nav">
+                            <a href="index.html" class="logo">Evénement</a>
+                            <ul class="nav">
+                                <li class="scroll-to-section"><router-link  to="/dashboard">Acceuil</router-link></li>
+                                <li class="scroll-to-section"> <router-link  to="/categories">Catégories</router-link></li>
+                                <li class="scroll-to-section"><router-link  class="active" to="/evenements">Evévénements</router-link></li>
+                                <li class="scroll-to-section"><router-link   to="/inscriptions">Inscriptions</router-link></li>
+                                <li class="scroll-to-section"> <router-link  to="/utilisateurs">Utilisateurs</router-link></li>
+                                <li class="scroll-to-section"> <router-link  to="/profils">Profil</router-link></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="section main-banner" id="top" data-section="section1">
+            <video autoplay muted loop id="bg-video">
+                <source src="/edu/assets/images/course-video.mp4" type="video/mp4" />
+            </video>
+            <div class="video-overlay header-text">
+                <div class="container">
+                </div>
+            </div>
+        </section>
+
+        <section class="right-info" id="meetings">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-heading">
+                            <h2>Catégories</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-bg-primary">#</th>
+                                        <th>Titre</th>
+                                        <th>Description</th>
+                                        <th>Date debut</th>
+                                        <th>Date fin</th>
+                                        <th>Heure debut</th>
+                                        <th>Heure fin</th>
+                                        <th>Lieu</th>
+                                        <th>Categorie</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(event, index) in events" :key="event.id">
+                                        <th scope="row">{{ index + 1 }}</th>
+                                        <td>{{ event.title }}</td>
+                                        <td>{{ event.description }}</td>
+                                        <td class="text-success">{{ event.date_debut }}</td>
+                                        <td class="text-danger">{{ event.date_fin }}</td>
+                                        <td class="text-success">{{ event.heure_debut }}</td>
+                                        <td class="text-danger">{{ event.heure_fin }}</td>
+                                        <td>{{ event.lieu }}</td>
+                                        <td>{{ event.categorie }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary"  @click.prevent="openUpdateModal(evenement)">Modifier</button>
+                                            <button type="button" class="btn btn-danger" @click="deleteEvents(evenement)">
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+    <section>
+        <div class="modal fade bs-example-modal-lg" id="bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalLabel">Modifier Evenement</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <form @submit.prevent="updateEvents">
+                <div class="form-group">
+                  <label for="nom">Nom</label>
+                  <input type="text" class="form-control" v-model="currentEvents.title" required>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea class="form-control" v-model="currentEvents.description" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </section>
+
+        <section class="contact-us" id="contact">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 align-self-center">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form @submit.prevent="getEvents" id="contact">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <h2>Ajouter un Evenement</h2>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                                <input name="name" type="text" id="name" placeholder="Titre" required="" v-model="formData.title">
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                                <input name="name" type="text" id="name" placeholder="Lieu" required="" v-model="formData.lieu">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                                <input name="name" type="date" id="name" placeholder="Date de debut" required="" v-model="formData.date_debut">
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                                <input name="name" type="date" id="name" placeholder="Date de fin" required="" v-model="formData.date_fin">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                                <input name="name" type="time" id="name" placeholder="Heure de debut" required="" v-model="formData.heure_debut">
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                                <input name="name" type="time" id="name" placeholder="Heure de fin" required="" v-model="formData.heure_fin">
+                                            </fieldset>
+                                        </div>
+                                        
+                                        <div class="col-lg-4">
+                                            <fieldset>
+                                        <select class="form-control" name="name" id="name" v-model="selectedCategory"  required=""  placeholder="Categorie" >
+                                            <option value="">Toutes les catégories</option>
+                                            <option v-for="category in categories" :key="category.id" :value="category.nom">
+                                            {{ category.nom }} 
+                                            </option>
+                                        </select>
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <fieldset>
+                                                <textarea name="message" type="text" class="form-control" id="message" placeholder="Description" required="" v-model="formData.description"></textarea>
+                                            </fieldset>
+                                        </div>
+                                        <button type="submit" id="form-submit" class="button">Enregister</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <p> @waouhmonde.com</p>
+            </div>
+        </section>
+    </div>
+</template>
+
+<script>
+import { authService } from '@/_services/authService'; 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
+export default {
+    name: 'Evenements',
+    data() {
+        return {
+            isModalVisible: false,
+            selectedEventsId: null,
+            categories: [],
+            events: [],
+            formData: {
+                title: '',
+                date_debut: '',
+                date_fin: '',
+                heure_debut: '',
+                heure_fin: '',
+                lieu: '',
+                description: '',
+                status: 'actif', // Valeur par défaut pour le statut
+                status: '',
+                categorie_id: '',
+            },
+            currentEvents: {
+                title: '',
+                date_debut: '',
+                date_fin: '',
+                heure_debut: '',
+                heure_fin: '',
+                lieu: '',
+                description: '',
+                status: '',
+                categorie_id: '', 
+            },
+        };
+    },
+    created() {
+        this.fetchEvents();
+        this.fetchCategories();
+    },
+    
+    methods: {
+        async getEvents() {
+            try {
+
+                      // Mettre à jour categorie_id avec la valeur sélectionnée
+        this.formData.categorie_id = this.selectedCategory;
+                   // Ajoutez la valeur par défaut du statut dans le corps de la requête
+        this.formData.status = 'actif';
+
+                const response = await fetch('http://127.0.0.1:8000/api/evernements', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    },
+                    body: JSON.stringify(this.formData),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Une erreur est survenue lors de l'enregistrement.");
+                }
+
+                const data = await response.json();
+                console.log('Data:', data);
+
+                toast.success('Enregistrement réussi!', { duration: 10000, background: '#28a745' });
+                setTimeout(() => {
+                    this.refreshPage(); // Appel de la fonction pour rafraîchir la page
+                }, 5000);
+
+            } catch (error) {
+                console.error('Error in getevenement:', error);
+                toast.error(`Erreur lors de l'enregistrement : ${error.message}`, { duration: 5000, background: '#dc3545' });
+            }
+        },
+        fetchEvents() {
+      fetch("http://127.0.0.1:8000/api/evernements")
+        .then((response) => response.json())
+        .then((data) => {
+          this.events = data;
+        })
+        .catch((error) => {
+          console.error("Error fetching events:", error);
+        });
+    },
+
+        openUpdateModal(evenement) {
+      this.selectedEventsId = evenement.id;
+      this.formData = { ...evenement};
+      $('#bd-example-modal-lg').modal('show');
+    },
+    updateEvents() {
+      fetch(`http://127.0.0.1:8000/api/categories/${this.currentEvents.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authService.getToken()}`,
+        },
+        body: JSON.stringify(this.currentEvents),
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.fetchEvents();
+          this.isModalVisible = false;  // Masquer le modal après la modification
+        })
+        .catch(error => {
+          console.error('Error updating category:', error);
+        });
+    },
+        deleteEvent(evenement) {
+            fetch(`http://127.0.0.1:8000/api/categories/${categorie.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${authService.getToken()}`,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.fetchCategories();
+            })
+            .catch(error => {
+                console.error('Error deleting category:', error);
+            });
+        },
+
+        fetchCategories() {
+      fetch("http://127.0.0.1:8000/api/categories")
+        .then((response) => response.json())
+        .then((data) => {
+          this.categories = data;
+        })
+        .catch((error) => {
+          console.error("Error fetching categories:", error);
+        });
+    },
+        logout() {
+            authService.logout();
+            this.$router.push('/login');
+        },
+    },
+};
+</script>
+
+<style scoped>
+/* Styles spécifiques au composant Home */
+</style>
